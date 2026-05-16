@@ -203,14 +203,38 @@ const App = (() => {
     function updateAudioForWeather(mode) {
         if (!audioEnabled) return;
 
-        // Audio is placeholder — since we don't have real sound files,
-        // the audio elements remain silent. In production, you'd load actual
-        // ambient sound URLs here.
         stopAllAudio();
+
+        try {
+            if (mode === 'rain') {
+                const rain = document.getElementById('audio-rain');
+                if (rain) rain.play().catch(e => console.log('Audio error:', e));
+                const softMusic = document.getElementById('audio-soft-rain-music');
+                if (softMusic) softMusic.play().catch(e => console.log('Audio error:', e));
+            } else if (mode === 'thunder') {
+                const thunder = document.getElementById('audio-thunder');
+                if (thunder) thunder.play().catch(e => console.log('Audio error:', e));
+                const rain = document.getElementById('audio-rain');
+                if (rain) rain.play().catch(e => console.log('Audio error:', e));
+                const sweetBg = document.getElementById('audio-bg-sweet');
+                if (sweetBg) sweetBg.play().catch(e => console.log('Audio error:', e));
+            } else if (mode === 'sunny') {
+                const birds = document.getElementById('audio-birds');
+                if (birds) birds.play().catch(e => console.log('Audio error:', e));
+            } else if (mode === 'snow' || mode === 'cloudy') {
+                const wind = document.getElementById('audio-wind');
+                if (wind) wind.play().catch(e => console.log('Audio error:', e));
+            } else if (mode === 'night') {
+                const night = document.getElementById('audio-night');
+                if (night) night.play().catch(e => console.log('Audio error:', e));
+            }
+        } catch (error) {
+            console.log('Audio playback failed', error);
+        }
     }
 
     function stopAllAudio() {
-        ['audio-rain', 'audio-thunder', 'audio-wind', 'audio-birds', 'audio-night'].forEach(id => {
+        ['audio-rain', 'audio-thunder', 'audio-wind', 'audio-birds', 'audio-night', 'audio-bg-sweet', 'audio-soft-rain-music'].forEach(id => {
             const el = document.getElementById(id);
             if (el) {
                 el.pause();

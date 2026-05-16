@@ -42,8 +42,20 @@
         font-size: 1.1rem;
     }
 
-    .city-indicator {
+    .city-indicator span {
         display: none;
+    }
+
+    .city-indicator {
+        width: 42px;
+        height: 42px;
+        padding: 0;
+        justify-content: center;
+    }
+
+    .pin-icon {
+        width: 18px;
+        height: 18px;
     }
 
     .hero-temp {
@@ -161,13 +173,15 @@
     }
 
     .audio-toggle,
-    .theme-toggle {
+    .theme-toggle,
+    .city-indicator {
         width: 36px;
         height: 36px;
     }
 
     .audio-toggle svg,
-    .theme-toggle svg {
+    .theme-toggle svg,
+    .pin-icon {
         width: 16px;
         height: 16px;
     }

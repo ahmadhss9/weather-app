@@ -423,7 +423,8 @@ input {
     color: var(--text-primary);
     font-size: 0.9rem;
     opacity: 1;
-    width: auto;
+    width: 100%;
+    min-width: 0;
     transition: opacity var(--transition-fast);
 }
 
