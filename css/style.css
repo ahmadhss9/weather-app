@@ -499,6 +499,14 @@ input {
     font-size: 0.82rem;
     color: var(--text-secondary);
     font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.city-indicator:hover {
+    color: var(--accent-cyan);
+    border-color: var(--accent-cyan);
+    background: var(--bg-card-hover);
 }
 
 .pin-icon {

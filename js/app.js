@@ -20,10 +20,11 @@ const App = (() => {
         setupThemeToggle();
         setupAudioToggle();
         setupNavbarScroll();
+        setupLocationButton();
         UI.setupHourlyScroll();
 
         // Add ripple effects to buttons
-        document.querySelectorAll('.search-toggle, .audio-toggle, .theme-toggle, .scroll-btn').forEach(btn => {
+        document.querySelectorAll('.search-toggle, .audio-toggle, .theme-toggle, .scroll-btn, .city-indicator').forEach(btn => {
             UI.addRipple(btn);
         });
 
@@ -108,6 +109,33 @@ const App = (() => {
         } catch (error) {
             console.error('Failed to fetch weather for selected city:', error);
         }
+    }
+
+    // ========== LOCATION BUTTON ==========
+    function setupLocationButton() {
+        const btn = document.getElementById('city-indicator');
+        btn.addEventListener('click', async () => {
+            const cityNameNav = document.getElementById('city-name-nav');
+            const originalText = cityNameNav.textContent;
+            cityNameNav.textContent = 'Detecting...';
+            btn.style.opacity = '0.7';
+            btn.style.pointerEvents = 'none';
+
+            try {
+                const coords = await WeatherAPI.detectLocation();
+                const locationInfo = await WeatherAPI.reverseGeocode(coords.lat, coords.lon);
+                currentLocation = { ...locationInfo, lat: coords.lat, lon: coords.lon };
+                const weatherData = await WeatherAPI.fetchWeather(coords.lat, coords.lon);
+                renderAll(weatherData, currentLocation);
+            } catch (error) {
+                console.warn('Location detection failed:', error.message);
+                cityNameNav.textContent = originalText;
+                alert("Could not detect location. Please check browser permissions.");
+            } finally {
+                btn.style.opacity = '1';
+                btn.style.pointerEvents = 'auto';
+            }
+        });
     }
 
     // ========== NAVBAR SCROLL BEHAVIOR ==========
