@@ -380,19 +380,14 @@ input {
     position: relative;
     display: flex;
     align-items: center;
-    width: 44px;
+    width: 100%;
+    max-width: 380px;
     height: 44px;
     background: var(--bg-card);
     border: 1px solid var(--border-color);
-    border-radius: var(--radius-full);
+    border-radius: var(--radius-lg);
     overflow: hidden;
     transition: all var(--transition-base);
-}
-
-.search-container.expanded {
-    width: 100%;
-    max-width: 380px;
-    border-radius: var(--radius-lg);
 }
 
 .search-toggle {
@@ -422,14 +417,9 @@ input {
     background: transparent;
     color: var(--text-primary);
     font-size: 0.9rem;
-    opacity: 0;
-    width: 0;
-    transition: opacity var(--transition-fast);
-}
-
-.search-container.expanded .search-input {
     opacity: 1;
     width: auto;
+    transition: opacity var(--transition-fast);
 }
 
 .search-input::placeholder {

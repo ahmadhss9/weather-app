@@ -4,7 +4,6 @@
 
 const Search = (() => {
     let searchTimeout = null;
-    let isExpanded = false;
 
     function init(onCitySelected) {
         const searchToggle = document.getElementById('search-toggle');
@@ -12,28 +11,15 @@ const Search = (() => {
         const searchInput = document.getElementById('search-input');
         const suggestionsBox = document.getElementById('search-suggestions');
 
-        // Toggle search expansion
+        // Focus search input when clicking the search icon
         searchToggle.addEventListener('click', () => {
-            isExpanded = !isExpanded;
-            if (isExpanded) {
-                searchContainer.classList.add('expanded');
-                setTimeout(() => searchInput.focus(), 300);
-            } else {
-                searchContainer.classList.remove('expanded');
-                searchInput.value = '';
-                suggestionsBox.classList.remove('active');
-                suggestionsBox.innerHTML = '';
-            }
+            searchInput.focus();
         });
 
-        // Close search on outside click
+        // Close search suggestions on outside click
         document.addEventListener('click', (e) => {
-            if (!searchContainer.contains(e.target) && isExpanded) {
-                isExpanded = false;
-                searchContainer.classList.remove('expanded');
-                searchInput.value = '';
+            if (!searchContainer.contains(e.target)) {
                 suggestionsBox.classList.remove('active');
-                suggestionsBox.innerHTML = '';
             }
         });
 
@@ -67,11 +53,8 @@ const Search = (() => {
                 }
             }
             if (e.key === 'Escape') {
-                isExpanded = false;
-                searchContainer.classList.remove('expanded');
-                searchInput.value = '';
+                searchInput.blur();
                 suggestionsBox.classList.remove('active');
-                suggestionsBox.innerHTML = '';
             }
         });
     }
@@ -112,8 +95,6 @@ const Search = (() => {
         searchInput.value = '';
         suggestionsBox.classList.remove('active');
         suggestionsBox.innerHTML = '';
-        searchContainer.classList.remove('expanded');
-        isExpanded = false;
 
         if (onCitySelected) {
             onCitySelected({

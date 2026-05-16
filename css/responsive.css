@@ -93,10 +93,6 @@
         max-width: 280px;
     }
 
-    .search-container.expanded {
-        max-width: 260px;
-    }
-
     .details-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 12px;
@@ -177,7 +173,6 @@
     }
 
     .search-container {
-        width: 36px;
         height: 36px;
     }
 
