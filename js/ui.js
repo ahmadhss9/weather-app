@@ -271,8 +271,12 @@ const UI = (() => {
             ripple.className = 'ripple';
             ripple.style.left = `${e.clientX - rect.left - 100}px`;
             ripple.style.top = `${e.clientY - rect.top - 100}px`;
-            this.style.position = 'relative';
+            
+            if (window.getComputedStyle(this).position === 'static') {
+                this.style.position = 'relative';
+            }
             this.style.overflow = 'hidden';
+            
             this.appendChild(ripple);
             setTimeout(() => ripple.remove(), 600);
         });
