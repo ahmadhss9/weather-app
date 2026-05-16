@@ -1,0 +1,177 @@
+/* ==========================================
+   WEATHERVERSE — MAIN APPLICATION
+   ========================================== */
+
+const App = (() => {
+    let currentTheme = 'dark';
+    let audioEnabled = false;
+    let currentWeatherMode = null;
+    let currentLocation = null;
+
+    // ========== INITIALIZATION ==========
+    async function init() {
+        UI.updateLoadingProgress(10);
+
+        // Setup theme
+        const savedTheme = localStorage.getItem('weatherverse-theme') || 'dark';
+        setTheme(savedTheme);
+
+        // Setup event listeners
+        setupThemeToggle();
+        setupAudioToggle();
+        UI.setupHourlyScroll();
+
+        // Add ripple effects to buttons
+        document.querySelectorAll('.search-toggle, .audio-toggle, .theme-toggle, .scroll-btn').forEach(btn => {
+            UI.addRipple(btn);
+        });
+
+        UI.updateLoadingProgress(20);
+
+        // Initialize search
+        Search.init(handleCitySelected);
+
+        // Setup scroll animations
+        Animations.setupScrollAnimations();
+
+        UI.updateLoadingProgress(30);
+
+        // Detect location and fetch weather
+        try {
+            const coords = await WeatherAPI.detectLocation();
+            UI.updateLoadingProgress(50);
+
+            const locationInfo = await WeatherAPI.reverseGeocode(coords.lat, coords.lon);
+            currentLocation = { ...locationInfo, lat: coords.lat, lon: coords.lon };
+            UI.updateLoadingProgress(70);
+
+            const weatherData = await WeatherAPI.fetchWeather(coords.lat, coords.lon);
+            UI.updateLoadingProgress(90);
+
+            renderAll(weatherData, currentLocation);
+            UI.updateLoadingProgress(100);
+
+            setTimeout(() => UI.hideLoadingScreen(), 500);
+        } catch (error) {
+            console.warn('Location detection failed:', error.message);
+            UI.updateLoadingProgress(50);
+
+            // Fallback: London
+            await loadWeatherForCity(51.5074, -0.1278, 'London', 'United Kingdom');
+        }
+    }
+
+    // ========== LOAD WEATHER FOR COORDINATES ==========
+    async function loadWeatherForCity(lat, lon, city, country) {
+        try {
+            UI.updateLoadingProgress(70);
+
+            const locationInfo = city
+                ? { city, country, displayName: `${city}, ${country}` }
+                : await WeatherAPI.reverseGeocode(lat, lon);
+
+            currentLocation = { ...locationInfo, lat, lon };
+
+            const weatherData = await WeatherAPI.fetchWeather(lat, lon);
+            UI.updateLoadingProgress(100);
+
+            renderAll(weatherData, currentLocation);
+
+            setTimeout(() => UI.hideLoadingScreen(), 300);
+        } catch (error) {
+            console.error('Failed to load weather:', error);
+        }
+    }
+
+    // ========== RENDER ALL ==========
+    function renderAll(weatherData, location) {
+        // Update UI
+        UI.renderWeather(weatherData, location);
+
+        // Set weather atmosphere
+        const mode = weatherData.current.weatherMode;
+        if (mode !== currentWeatherMode) {
+            currentWeatherMode = mode;
+            Animations.setWeatherMode(mode);
+            updateAudioForWeather(mode);
+        }
+    }
+
+    // ========== CITY SELECTED FROM SEARCH ==========
+    async function handleCitySelected(locationData) {
+        currentLocation = locationData;
+
+        try {
+            const weatherData = await WeatherAPI.fetchWeather(locationData.lat, locationData.lon);
+            renderAll(weatherData, locationData);
+        } catch (error) {
+            console.error('Failed to fetch weather for selected city:', error);
+        }
+    }
+
+    // ========== THEME TOGGLE ==========
+    function setupThemeToggle() {
+        const toggle = document.getElementById('theme-toggle');
+        toggle.addEventListener('click', () => {
+            currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(currentTheme);
+        });
+    }
+
+    function setTheme(theme) {
+        currentTheme = theme;
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('weatherverse-theme', theme);
+    }
+
+    // ========== AUDIO SYSTEM ==========
+    function setupAudioToggle() {
+        const toggle = document.getElementById('audio-toggle');
+        const audioOn = toggle.querySelector('.audio-on');
+        const audioOff = toggle.querySelector('.audio-off');
+
+        toggle.addEventListener('click', () => {
+            audioEnabled = !audioEnabled;
+            if (audioEnabled) {
+                toggle.classList.remove('muted');
+                audioOn.style.display = 'block';
+                audioOff.style.display = 'none';
+                updateAudioForWeather(currentWeatherMode);
+            } else {
+                toggle.classList.add('muted');
+                audioOn.style.display = 'none';
+                audioOff.style.display = 'block';
+                stopAllAudio();
+            }
+        });
+
+        // Start muted
+        toggle.classList.add('muted');
+        audioOn.style.display = 'none';
+        audioOff.style.display = 'block';
+    }
+
+    function updateAudioForWeather(mode) {
+        if (!audioEnabled) return;
+
+        // Audio is placeholder — since we don't have real sound files,
+        // the audio elements remain silent. In production, you'd load actual
+        // ambient sound URLs here.
+        stopAllAudio();
+    }
+
+    function stopAllAudio() {
+        ['audio-rain', 'audio-thunder', 'audio-wind', 'audio-birds', 'audio-night'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.pause();
+                el.currentTime = 0;
+            }
+        });
+    }
+
+    // ========== START ==========
+    document.addEventListener('DOMContentLoaded', init);
+
+    return { init };
+})();

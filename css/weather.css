@@ -1,0 +1,231 @@
+/* ==========================================
+   WEATHERVERSE — WEATHER-SPECIFIC STYLES
+   ========================================== */
+
+/* ---------- WEATHER MODE: SUNNY ---------- */
+.weather-mode-sunny .sky-layer {
+    background: linear-gradient(180deg, #1e3a5f 0%, #2d6aa0 30%, #87CEEB 60%, #F0C27F 100%);
+}
+
+[data-theme="light"] .weather-mode-sunny .sky-layer {
+    background: linear-gradient(180deg, #87CEEB 0%, #A8D8EA 40%, #FDE68A 100%);
+}
+
+.weather-mode-sunny .sun-element {
+    position: absolute;
+    top: 12%;
+    right: 15%;
+    width: 100px;
+    height: 100px;
+    background: radial-gradient(circle, #FDE68A 0%, #FDBA74 40%, transparent 70%);
+    border-radius: 50%;
+    animation: sunPulse 4s ease-in-out infinite, sunGlow 4s ease-in-out infinite;
+}
+
+.weather-mode-sunny .sun-element::after {
+    content: '';
+    position: absolute;
+    inset: -40px;
+    background: radial-gradient(circle, rgba(253,186,116,0.12) 0%, transparent 60%);
+    border-radius: 50%;
+}
+
+/* ---------- WEATHER MODE: RAIN ---------- */
+.weather-mode-rain .sky-layer {
+    background: linear-gradient(180deg, #0a0f1a 0%, #151d2e 30%, #1a2640 60%, #243350 100%);
+}
+
+[data-theme="light"] .weather-mode-rain .sky-layer {
+    background: linear-gradient(180deg, #4B5563 0%, #6B7280 40%, #9CA3AF 100%);
+}
+
+.rain-drop {
+    position: absolute;
+    width: 2px;
+    background: linear-gradient(180deg, transparent, rgba(148,163,184,0.5));
+    border-radius: 0 0 2px 2px;
+    animation: rainFall linear infinite;
+    pointer-events: none;
+}
+
+.rain-drop.heavy {
+    width: 2.5px;
+    background: linear-gradient(180deg, transparent, rgba(148,163,184,0.7));
+    animation-name: rainFallHeavy;
+}
+
+.lightning-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0);
+    pointer-events: none;
+    z-index: 5;
+}
+
+.lightning-overlay.flash {
+    animation: lightningFlash 0.5s ease-out;
+}
+
+/* ---------- WEATHER MODE: SNOW ---------- */
+.weather-mode-snow .sky-layer {
+    background: linear-gradient(180deg, #0f1729 0%, #1a2744 30%, #2d4a7a 60%, #4a6fa5 100%);
+}
+
+[data-theme="light"] .weather-mode-snow .sky-layer {
+    background: linear-gradient(180deg, #C4D4E0 0%, #D6E4F0 40%, #E8F0F8 100%);
+}
+
+.snow-particle {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    opacity: 0;
+    animation: snowFall linear infinite;
+    pointer-events: none;
+}
+
+.fog-layer {
+    position: absolute;
+    bottom: 0;
+    left: -100%;
+    width: 300%;
+    height: 30%;
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        rgba(200,215,230,0.08) 20%, 
+        rgba(200,215,230,0.12) 50%, 
+        rgba(200,215,230,0.08) 80%, 
+        transparent 100%
+    );
+    animation: fogDrift 25s linear infinite;
+    pointer-events: none;
+}
+
+/* ---------- WEATHER MODE: NIGHT ---------- */
+.weather-mode-night .sky-layer {
+    background: linear-gradient(180deg, #020617 0%, #0a0f1f 30%, #111827 60%, #1a2035 100%);
+}
+
+[data-theme="light"] .weather-mode-night .sky-layer {
+    background: linear-gradient(180deg, #1E293B 0%, #334155 50%, #475569 100%);
+}
+
+.star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    animation: starTwinkle ease-in-out infinite;
+    pointer-events: none;
+}
+
+.star.bright {
+    animation-name: starPulse;
+    box-shadow: 0 0 4px rgba(255,255,255,0.5);
+}
+
+/* ---------- WEATHER MODE: CLOUDY ---------- */
+.weather-mode-cloudy .sky-layer {
+    background: linear-gradient(180deg, #111827 0%, #1E293B 40%, #2d3a50 100%);
+}
+
+[data-theme="light"] .weather-mode-cloudy .sky-layer {
+    background: linear-gradient(180deg, #94A3B8 0%, #B0BEC5 40%, #CFD8DC 100%);
+}
+
+/* ---------- WEATHER MODE: THUNDERSTORM ---------- */
+.weather-mode-thunder .sky-layer {
+    background: linear-gradient(180deg, #050810 0%, #0a1020 30%, #15192e 60%, #1a1f35 100%);
+}
+
+/* ---------- ATMOSPHERIC PARTICLES ---------- */
+.atmo-particle {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    animation: particleFloat linear infinite;
+}
+
+.atmo-particle.warm {
+    background: rgba(253,186,116,0.2);
+}
+
+.atmo-particle.cool {
+    background: rgba(56,189,248,0.15);
+}
+
+.atmo-particle.neutral {
+    background: rgba(241,245,249,0.08);
+}
+
+/* ---------- WEATHER ICON SVG STYLES ---------- */
+.wi-sun {
+    animation: iconFloat 3s ease-in-out infinite;
+}
+
+.wi-cloud {
+    animation: iconFloat 4s ease-in-out infinite;
+}
+
+.wi-rain-drop {
+    animation: iconBounce 2s ease-in-out infinite;
+}
+
+.wi-snow-flake {
+    animation: iconSpin 8s linear infinite;
+}
+
+.wi-thunder-bolt {
+    animation: starPulse 1.5s ease-in-out infinite;
+}
+
+/* ---------- GRADIENT OVERLAY FOR WEATHER MODES ---------- */
+.weather-gradient-overlay {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.15;
+    background-size: 200% 200%;
+    animation: gradientShift 15s ease infinite;
+}
+
+.weather-mode-sunny .weather-gradient-overlay {
+    background: linear-gradient(135deg, rgba(253,186,116,0.15), transparent, rgba(251,146,60,0.1));
+}
+
+.weather-mode-rain .weather-gradient-overlay {
+    background: linear-gradient(135deg, rgba(56,189,248,0.1), transparent, rgba(30,58,138,0.1));
+}
+
+.weather-mode-snow .weather-gradient-overlay {
+    background: linear-gradient(135deg, rgba(186,230,253,0.1), transparent, rgba(147,197,253,0.08));
+}
+
+.weather-mode-night .weather-gradient-overlay {
+    background: linear-gradient(135deg, rgba(139,92,246,0.08), transparent, rgba(56,189,248,0.05));
+}
+
+/* ---------- CLOUD SVG ELEMENTS ---------- */
+.cloud-svg-element {
+    position: absolute;
+    pointer-events: none;
+}
+
+.cloud-svg-element svg {
+    width: 100%;
+    height: 100%;
+}
+
+.cloud-svg-element.large {
+    width: 250px;
+    height: 120px;
+}
+
+.cloud-svg-element.medium {
+    width: 180px;
+    height: 90px;
+}
+
+.cloud-svg-element.small {
+    width: 120px;
+    height: 60px;
+}
