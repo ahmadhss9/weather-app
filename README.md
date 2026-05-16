@@ -14,8 +14,8 @@ A premium, fully animated cinematic weather platform built with **pure HTML, CSS
 ### Core Functionality
 
 - **Automatic Geolocation** — Detects your current location on load
-- **Live Weather Data** — Real-time weather from Open-Meteo API (no API key required)
-- **City Search** — Search any city worldwide using OpenStreetMap Nominatim
+- **Live Weather Data** — Real-time accurate weather forecasting
+- **City Search** — Search any city worldwide instantly
 - **7-Day Forecast** — Daily high/low temps, conditions, and weather icons
 - **Hourly Timeline** — Scrollable 24-hour forecast with precipitation chances
 - **Weather Details** — Feels like, humidity, wind speed, UV index, sunrise & sunset
@@ -76,14 +76,6 @@ weather-app/
 
 ---
 
-## APIs Used
-
-| API                                               | Purpose                               | Key Required |
-| ------------------------------------------------- | ------------------------------------- | :----------: |
-| [Open-Meteo](https://open-meteo.com/)             | Weather data (current, hourly, daily) |    ❌ No     |
-| [Nominatim](https://nominatim.openstreetmap.org/) | Geocoding & city search               |    ❌ No     |
-
----
 
 ## Getting Started
 
@@ -130,8 +122,6 @@ weather-app/
 
 ## Credits
 
-- Weather data by [Open-Meteo](https://open-meteo.com/)
-- Geocoding by [OpenStreetMap Nominatim](https://nominatim.openstreetmap.org/)
 - Fonts by [Google Fonts](https://fonts.google.com/)
 
 ---
