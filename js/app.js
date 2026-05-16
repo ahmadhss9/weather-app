@@ -19,6 +19,7 @@ const App = (() => {
         // Setup event listeners
         setupThemeToggle();
         setupAudioToggle();
+        setupNavbarScroll();
         UI.setupHourlyScroll();
 
         // Add ripple effects to buttons
@@ -107,6 +108,26 @@ const App = (() => {
         } catch (error) {
             console.error('Failed to fetch weather for selected city:', error);
         }
+    }
+
+    // ========== NAVBAR SCROLL BEHAVIOR ==========
+    function setupNavbarScroll() {
+        const navbar = document.getElementById('navbar');
+        let lastScrollY = window.scrollY;
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY < 50) {
+                // Always show at the top
+                navbar.classList.remove('navbar-hidden');
+            } else if (window.scrollY > lastScrollY) {
+                // Scrolling down
+                navbar.classList.add('navbar-hidden');
+            } else {
+                // Scrolling up
+                navbar.classList.remove('navbar-hidden');
+            }
+            lastScrollY = window.scrollY;
+        });
     }
 
     // ========== THEME TOGGLE ==========
