@@ -3,8 +3,8 @@
    ========================================== */
 
 const App = (() => {
-    let currentTheme = 'dark';
-    let audioEnabled = false;
+    let currentTheme = 'light';
+    let audioEnabled = true;
     let currentWeatherMode = null;
     let currentLocation = null;
 
@@ -13,8 +13,20 @@ const App = (() => {
         UI.updateLoadingProgress(10);
 
         // Setup theme
-        const savedTheme = localStorage.getItem('weatherverse-theme') || 'dark';
+        const savedTheme = localStorage.getItem('weatherverse-theme') || 'light';
         setTheme(savedTheme);
+
+        // Unlock audio on first interaction (browser autoplay policy)
+        document.body.addEventListener('click', function unlockAudio() {
+            if (audioEnabled) {
+                const bgMusic = document.getElementById('audio-bg-sweet');
+                if (bgMusic && bgMusic.paused) {
+                    bgMusic.play().catch(() => {});
+                    if (currentWeatherMode) updateAudioForWeather(currentWeatherMode);
+                }
+            }
+            document.body.removeEventListener('click', unlockAudio);
+        }, { once: true });
 
         // Setup event listeners
         setupThemeToggle();
@@ -36,29 +48,36 @@ const App = (() => {
         // Setup scroll animations
         Animations.setupScrollAnimations();
 
-        UI.updateLoadingProgress(30);
+        UI.updateLoadingProgress(40);
 
-        // Detect location and fetch weather
+        // Fast path for LCP: Use IP location
         try {
-            const coords = await WeatherAPI.detectLocation();
-            UI.updateLoadingProgress(50);
-
-            const locationInfo = await WeatherAPI.reverseGeocode(coords.lat, coords.lon);
-            currentLocation = { ...locationInfo, lat: coords.lat, lon: coords.lon };
-            UI.updateLoadingProgress(70);
-
-            const weatherData = await WeatherAPI.fetchWeather(coords.lat, coords.lon);
+            const ipData = await WeatherAPI.detectLocationIP();
+            currentLocation = { ...ipData, displayName: `${ipData.city}${ipData.country ? ', ' + ipData.country : ''}` };
+            
+            const weatherData = await WeatherAPI.fetchWeather(ipData.lat, ipData.lon);
             UI.updateLoadingProgress(90);
-
             renderAll(weatherData, currentLocation);
             UI.updateLoadingProgress(100);
+            
+            setTimeout(() => UI.hideLoadingScreen(), 300);
 
-            setTimeout(() => UI.hideLoadingScreen(), 500);
+            // Attempt high accuracy in background silently (optional)
+            if (navigator.geolocation) {
+                navigator.permissions.query({ name: 'geolocation' }).then(result => {
+                    if (result.state === 'granted') {
+                        WeatherAPI.detectLocation().then(async (coords) => {
+                            const locationInfo = await WeatherAPI.reverseGeocode(coords.lat, coords.lon);
+                            currentLocation = { ...locationInfo, lat: coords.lat, lon: coords.lon };
+                            const freshWeather = await WeatherAPI.fetchWeather(coords.lat, coords.lon);
+                            renderAll(freshWeather, currentLocation);
+                        }).catch(() => {});
+                    }
+                }).catch(() => {});
+            }
+
         } catch (error) {
-            console.warn('Location detection failed:', error.message);
-            UI.updateLoadingProgress(50);
-
-            // Fallback: London
+            console.warn('IP Location failed, falling back to London:', error.message);
             await loadWeatherForCity(51.5074, -0.1278, 'London', 'United Kingdom');
         }
     }
@@ -194,10 +213,16 @@ const App = (() => {
             }
         });
 
-        // Start muted
-        toggle.classList.add('muted');
-        audioOn.style.display = 'none';
-        audioOff.style.display = 'block';
+        // Start based on audioEnabled flag
+        if (audioEnabled) {
+            toggle.classList.remove('muted');
+            audioOn.style.display = 'block';
+            audioOff.style.display = 'none';
+        } else {
+            toggle.classList.add('muted');
+            audioOn.style.display = 'none';
+            audioOff.style.display = 'block';
+        }
     }
 
     function updateAudioForWeather(mode) {
@@ -206,6 +231,10 @@ const App = (() => {
         stopAllAudio();
 
         try {
+            // ALWAYS play soft background music
+            const bgMusic = document.getElementById('audio-bg-sweet');
+            if (bgMusic) bgMusic.play().catch(e => console.log('Audio error (autoplay blocked?):', e));
+
             if (mode === 'rain') {
                 const rain = document.getElementById('audio-rain');
                 if (rain) rain.play().catch(e => console.log('Audio error:', e));
@@ -216,8 +245,6 @@ const App = (() => {
                 if (thunder) thunder.play().catch(e => console.log('Audio error:', e));
                 const rain = document.getElementById('audio-rain');
                 if (rain) rain.play().catch(e => console.log('Audio error:', e));
-                const sweetBg = document.getElementById('audio-bg-sweet');
-                if (sweetBg) sweetBg.play().catch(e => console.log('Audio error:', e));
             } else if (mode === 'sunny') {
                 const birds = document.getElementById('audio-birds');
                 if (birds) birds.play().catch(e => console.log('Audio error:', e));

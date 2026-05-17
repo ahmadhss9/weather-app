@@ -64,39 +64,58 @@ const WeatherAPI = (() => {
         });
     }
 
+    // Detect location using IP for fast LCP
+    async function detectLocationIP() {
+        try {
+            const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
+            const data = await response.json();
+            return {
+                lat: parseFloat(data.latitude),
+                lon: parseFloat(data.longitude),
+                city: data.city || 'Unknown',
+                country: data.country || ''
+            };
+        } catch (e) {
+            return { lat: 51.5074, lon: -0.1278, city: 'London', country: 'United Kingdom' };
+        }
+    }
+
     // Reverse geocode coordinates to city name
     async function reverseGeocode(lat, lon) {
         try {
             const response = await fetch(
-                `${NOMINATIM_BASE}/reverse?format=json&lat=${lat}&lon=${lon}&zoom=10&addressdetails=1`,
-                { headers: { 'Accept-Language': 'en' } }
+                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
             );
             const data = await response.json();
-            const addr = data.address || {};
-            const city = addr.city || addr.town || addr.village || addr.county || addr.state || 'Unknown';
-            const country = addr.country || '';
+            const city = data.city || data.locality || data.principalSubdivision || 'Unknown';
+            const country = data.countryName || '';
             return { city, country, displayName: `${city}, ${country}` };
         } catch (error) {
             return { city: 'Unknown', country: '', displayName: 'Unknown Location' };
         }
     }
 
-    // Search for cities using Nominatim
+    // Search for cities (live suggestions)
     async function searchCity(query) {
-        if (!query || query.length < 2) return [];
+        if (!query || query.length < 1) return [];
         try {
             const response = await fetch(
-                `${NOMINATIM_BASE}/search?format=json&q=${encodeURIComponent(query)}&limit=5&addressdetails=1`,
-                { headers: { 'Accept-Language': 'en' } }
+                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=8&language=en&format=json`
             );
             const data = await response.json();
-            return data.map(item => ({
-                displayName: item.display_name,
-                city: item.address?.city || item.address?.town || item.address?.village || item.name,
-                country: item.address?.country || '',
-                lat: parseFloat(item.lat),
-                lon: parseFloat(item.lon)
-            }));
+            if (!data.results) return [];
+            return data.results.map(item => {
+                const displayNameParts = [item.name];
+                if (item.admin1) displayNameParts.push(item.admin1);
+                if (item.country) displayNameParts.push(item.country);
+                return {
+                    displayName: displayNameParts.join(', '),
+                    city: item.name,
+                    country: item.country || '',
+                    lat: parseFloat(item.latitude),
+                    lon: parseFloat(item.longitude)
+                };
+            });
         } catch (error) {
             console.error('Search failed:', error);
             return [];
@@ -211,6 +230,7 @@ const WeatherAPI = (() => {
 
     return {
         detectLocation,
+        detectLocationIP,
         reverseGeocode,
         searchCity,
         fetchWeather,

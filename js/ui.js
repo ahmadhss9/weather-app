@@ -4,103 +4,189 @@
 
 const UI = (() => {
     // SVG Weather Icons — inline, animated, no external assets needed
+    // Premium 3D-like Glowing Weather Icons
     const WEATHER_ICONS = {
         'clear': (isDay = true) => isDay ? `
             <svg viewBox="0 0 100 100" class="weather-icon-svg wi-sun">
-                <circle cx="50" cy="50" r="16" fill="#FDBA74" stroke="#F59E0B" stroke-width="1"/>
-                <g stroke="#FDBA74" stroke-width="3" stroke-linecap="round" opacity="0.9">
-                    <line x1="50" y1="12" x2="50" y2="24"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" repeatCount="indefinite"/></line>
-                    <line x1="50" y1="76" x2="50" y2="88"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="0.3s" repeatCount="indefinite"/></line>
-                    <line x1="12" y1="50" x2="24" y2="50"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="0.6s" repeatCount="indefinite"/></line>
-                    <line x1="76" y1="50" x2="88" y2="50"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="0.9s" repeatCount="indefinite"/></line>
-                    <line x1="22" y1="22" x2="30" y2="30"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="1.2s" repeatCount="indefinite"/></line>
-                    <line x1="70" y1="70" x2="78" y2="78"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="1.5s" repeatCount="indefinite"/></line>
-                    <line x1="22" y1="78" x2="30" y2="70"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="1.8s" repeatCount="indefinite"/></line>
-                    <line x1="70" y1="30" x2="78" y2="22"><animate attributeName="opacity" values="0.6;1;0.6" dur="3s" begin="2.1s" repeatCount="indefinite"/></line>
+                <defs>
+                    <linearGradient id="sunGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#FFE066"/>
+                        <stop offset="100%" stop-color="#F59E0B"/>
+                    </linearGradient>
+                    <filter id="glowSun" x="-30%" y="-30%" width="160%" height="160%">
+                        <feGaussianBlur stdDeviation="5" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <circle cx="50" cy="50" r="22" fill="url(#sunGrad)" filter="url(#glowSun)"/>
+                <g stroke="#FDE68A" stroke-width="4" stroke-linecap="round" opacity="0.9">
+                    <line x1="50" y1="8" x2="50" y2="18"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" repeatCount="indefinite"/></line>
+                    <line x1="50" y1="82" x2="50" y2="92"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="0.2s" repeatCount="indefinite"/></line>
+                    <line x1="8" y1="50" x2="18" y2="50"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="0.4s" repeatCount="indefinite"/></line>
+                    <line x1="82" y1="50" x2="92" y2="50"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="0.6s" repeatCount="indefinite"/></line>
+                    <line x1="20" y1="20" x2="28" y2="28"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="0.8s" repeatCount="indefinite"/></line>
+                    <line x1="72" y1="72" x2="80" y2="80"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="1s" repeatCount="indefinite"/></line>
+                    <line x1="20" y1="80" x2="28" y2="72"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="1.2s" repeatCount="indefinite"/></line>
+                    <line x1="72" y1="28" x2="80" y2="20"><animate attributeName="opacity" values="0.4;1;0.4" dur="2s" begin="1.4s" repeatCount="indefinite"/></line>
                 </g>
             </svg>` : `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M60 30 A25 25 0 1 0 40 70 A20 20 0 0 1 60 30Z" fill="#CBD5E1" stroke="#94A3B8" stroke-width="1"/>
-                <circle cx="30" cy="25" r="2" fill="#F1F5F9" opacity="0.7"><animate attributeName="opacity" values="0.3;1;0.3" dur="2s" repeatCount="indefinite"/></circle>
-                <circle cx="75" cy="35" r="1.5" fill="#F1F5F9" opacity="0.5"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.5s" begin="0.5s" repeatCount="indefinite"/></circle>
-                <circle cx="20" cy="60" r="1.5" fill="#F1F5F9" opacity="0.6"><animate attributeName="opacity" values="0.3;1;0.3" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
-                <circle cx="80" cy="70" r="2" fill="#F1F5F9" opacity="0.4"><animate attributeName="opacity" values="0.3;1;0.3" dur="2.8s" begin="0.3s" repeatCount="indefinite"/></circle>
+                <defs>
+                    <linearGradient id="moonGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" stop-color="#F1F5F9"/>
+                        <stop offset="100%" stop-color="#94A3B8"/>
+                    </linearGradient>
+                    <filter id="glowMoon">
+                        <feGaussianBlur stdDeviation="4" result="blur" />
+                        <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                    </filter>
+                </defs>
+                <path d="M 50 20 A 30 30 0 1 1 50 80 A 15 30 0 1 0 50 20 Z" fill="url(#moonGrad)" filter="url(#glowMoon)"/>
+                <circle cx="25" cy="25" r="2" fill="#FFF"><animate attributeName="opacity" values="0.2;1;0.2" dur="2s" repeatCount="indefinite"/></circle>
+                <circle cx="80" cy="30" r="1.5" fill="#FFF"><animate attributeName="opacity" values="0.2;1;0.2" dur="2.5s" begin="0.5s" repeatCount="indefinite"/></circle>
+                <circle cx="20" cy="70" r="1.5" fill="#FFF"><animate attributeName="opacity" values="0.2;1;0.2" dur="3s" begin="1s" repeatCount="indefinite"/></circle>
+                <circle cx="75" cy="80" r="2" fill="#FFF"><animate attributeName="opacity" values="0.2;1;0.2" dur="1.8s" begin="0.3s" repeatCount="indefinite"/></circle>
             </svg>`,
-        'partly-cloudy': () => `
+        'partly-cloudy': (isDay = true) => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <circle cx="38" cy="35" r="14" fill="#FDBA74" stroke="#F59E0B" stroke-width="1"/>
-                <g stroke="#FDBA74" stroke-width="2" stroke-linecap="round" opacity="0.6">
-                    <line x1="38" y1="10" x2="38" y2="17"/>
-                    <line x1="18" y1="25" x2="13" y2="22"/>
-                    <line x1="16" y1="42" x2="10" y2="46"/>
-                </g>
-                <path d="M35 72 Q20 72 20 62 Q20 52 30 50 Q28 38 42 35 Q56 30 62 42 Q65 38 74 40 Q84 42 84 52 Q90 54 90 62 Q90 72 78 72 Z" fill="#94A3B8" stroke="#64748B" stroke-width="1">
-                    <animateTransform attributeName="transform" type="translate" values="0,0;2,-1;0,0" dur="4s" repeatCount="indefinite"/>
+                <defs>
+                    <linearGradient id="cloudGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF"/>
+                        <stop offset="100%" stop-color="#CBD5E1"/>
+                    </linearGradient>
+                    <filter id="shadow">
+                        <feDropShadow dx="0" dy="4" stdDeviation="4" flood-color="#000" flood-opacity="0.2"/>
+                    </filter>
+                </defs>
+                ${isDay ? '<circle cx="35" cy="35" r="18" fill="#F59E0B" filter="url(#shadow)"/>' : '<path d="M45 25 A18 18 0 1 0 35 55 A15 15 0 0 1 45 25Z" fill="#94A3B8" filter="url(#shadow)"/>'}
+                <path d="M30 75 Q15 75 15 60 Q15 45 30 43 Q30 25 50 25 Q70 25 72 43 Q85 45 85 60 Q85 75 70 75 Z" fill="url(#cloudGrad)" filter="url(#shadow)">
+                    <animateTransform attributeName="transform" type="translate" values="0,0;3,-1;0,0" dur="4s" repeatCount="indefinite"/>
                 </path>
             </svg>`,
         'cloudy': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg wi-cloud">
-                <path d="M28 70 Q12 70 12 58 Q12 46 24 44 Q22 28 38 24 Q54 18 62 32 Q66 26 78 28 Q90 30 90 44 Q98 46 98 58 Q98 70 82 70 Z" fill="#94A3B8" stroke="#64748B" stroke-width="1">
-                    <animateTransform attributeName="transform" type="translate" values="0,0;3,-2;0,0" dur="5s" repeatCount="indefinite"/>
+                <defs>
+                    <linearGradient id="cloudGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#FFFFFF"/>
+                        <stop offset="100%" stop-color="#CBD5E1"/>
+                    </linearGradient>
+                    <linearGradient id="cloudGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#E2E8F0"/>
+                        <stop offset="100%" stop-color="#94A3B8"/>
+                    </linearGradient>
+                    <filter id="shadowCloud">
+                        <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000" flood-opacity="0.15"/>
+                    </filter>
+                </defs>
+                <path d="M25 80 Q10 80 10 65 Q10 50 25 48 Q25 30 45 30 Q65 30 67 48 Q80 50 80 65 Q80 80 65 80 Z" fill="url(#cloudGrad2)" opacity="0.8" filter="url(#shadowCloud)">
+                    <animateTransform attributeName="transform" type="translate" values="0,0;-4,2;0,0" dur="5s" repeatCount="indefinite"/>
                 </path>
-                <path d="M15 80 Q6 80 6 72 Q6 64 14 62 Q12 52 24 50 Q36 46 42 56 Q45 52 52 54 Q60 55 60 64 Q66 66 66 72 Q66 80 56 80 Z" fill="#64748B" opacity="0.5">
-                    <animateTransform attributeName="transform" type="translate" values="0,0;-2,1;0,0" dur="6s" repeatCount="indefinite"/>
+                <path d="M35 70 Q20 70 20 55 Q20 40 35 38 Q35 20 55 20 Q75 20 77 38 Q90 40 90 55 Q90 70 75 70 Z" fill="url(#cloudGrad1)" filter="url(#shadowCloud)">
+                    <animateTransform attributeName="transform" type="translate" values="0,0;4,-2;0,0" dur="6s" repeatCount="indefinite"/>
                 </path>
             </svg>`,
         'fog': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <line x1="15" y1="40" x2="85" y2="40" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" opacity="0.5"><animate attributeName="opacity" values="0.3;0.6;0.3" dur="4s" repeatCount="indefinite"/></line>
-                <line x1="10" y1="52" x2="90" y2="52" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" opacity="0.7"><animate attributeName="opacity" values="0.4;0.8;0.4" dur="3.5s" begin="0.5s" repeatCount="indefinite"/></line>
-                <line x1="20" y1="64" x2="80" y2="64" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" opacity="0.4"><animate attributeName="opacity" values="0.2;0.5;0.2" dur="5s" begin="1s" repeatCount="indefinite"/></line>
+                <defs>
+                    <linearGradient id="fogGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="rgba(255,255,255,0)"/>
+                        <stop offset="50%" stop-color="rgba(255,255,255,0.9)"/>
+                        <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+                    </linearGradient>
+                </defs>
+                <rect x="10" y="35" width="80" height="8" rx="4" fill="url(#fogGrad)"><animate attributeName="x" values="5;15;5" dur="3s" repeatCount="indefinite"/></rect>
+                <rect x="20" y="50" width="60" height="8" rx="4" fill="url(#fogGrad)"><animate attributeName="x" values="25;15;25" dur="4s" repeatCount="indefinite"/></rect>
+                <rect x="15" y="65" width="70" height="8" rx="4" fill="url(#fogGrad)"><animate attributeName="x" values="10;20;10" dur="3.5s" repeatCount="indefinite"/></rect>
             </svg>`,
         'drizzle': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M25 55 Q12 55 12 45 Q12 35 22 33 Q20 20 34 17 Q48 12 55 24 Q58 20 68 22 Q78 24 78 35 Q85 37 85 45 Q85 55 72 55 Z" fill="#64748B" stroke="#475569" stroke-width="1"/>
-                <line x1="30" y1="62" x2="28" y2="72" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/></line>
-                <line x1="50" y1="62" x2="48" y2="72" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.3s" repeatCount="indefinite"/></line>
-                <line x1="70" y1="62" x2="68" y2="72" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.6s" repeatCount="indefinite"/></line>
+                <defs>
+                    <linearGradient id="cloudRain" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#E2E8F0"/>
+                        <stop offset="100%" stop-color="#64748B"/>
+                    </linearGradient>
+                </defs>
+                <path d="M30 65 Q15 65 15 50 Q15 35 30 33 Q30 15 50 15 Q70 15 72 33 Q85 35 85 50 Q85 65 70 65 Z" fill="url(#cloudRain)"/>
+                <line x1="35" y1="70" x2="33" y2="80" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="1s" repeatCount="indefinite"/></line>
+                <line x1="50" y1="70" x2="48" y2="80" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.3s" repeatCount="indefinite"/></line>
+                <line x1="65" y1="70" x2="63" y2="80" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values="0;1;0" dur="1s" begin="0.6s" repeatCount="indefinite"/></line>
             </svg>`,
         'rain': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M25 50 Q12 50 12 40 Q12 30 22 28 Q20 15 34 12 Q48 7 55 20 Q58 15 68 17 Q78 19 78 30 Q85 32 85 40 Q85 50 72 50 Z" fill="#475569" stroke="#334155" stroke-width="1"/>
-                <line x1="28" y1="58" x2="24" y2="74" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="y1" values="58;60;58" dur="0.6s" repeatCount="indefinite"/><animate attributeName="y2" values="74;78;74" dur="0.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0.4;1;0.4" dur="0.8s" repeatCount="indefinite"/></line>
-                <line x1="42" y1="56" x2="38" y2="72" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.4;1;0.4" dur="0.7s" begin="0.2s" repeatCount="indefinite"/></line>
-                <line x1="56" y1="58" x2="52" y2="74" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.4;1;0.4" dur="0.9s" begin="0.4s" repeatCount="indefinite"/></line>
-                <line x1="70" y1="56" x2="66" y2="72" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.4;1;0.4" dur="0.8s" begin="0.1s" repeatCount="indefinite"/></line>
+                <defs>
+                    <linearGradient id="cloudHeavyRain" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#94A3B8"/>
+                        <stop offset="100%" stop-color="#475569"/>
+                    </linearGradient>
+                </defs>
+                <path d="M30 55 Q15 55 15 40 Q15 25 30 23 Q30 5 50 5 Q70 5 72 23 Q85 25 85 40 Q85 55 70 55 Z" fill="url(#cloudHeavyRain)"/>
+                <line x1="30" y1="65" x2="25" y2="85" stroke="#0EA5E9" stroke-width="3.5" stroke-linecap="round"><animate attributeName="opacity" values="0.2;1;0.2" dur="0.6s" repeatCount="indefinite"/><animate attributeName="y1" values="60;70;60" dur="0.6s" repeatCount="indefinite"/><animate attributeName="y2" values="80;90;80" dur="0.6s" repeatCount="indefinite"/></line>
+                <line x1="45" y1="65" x2="40" y2="85" stroke="#0EA5E9" stroke-width="3.5" stroke-linecap="round"><animate attributeName="opacity" values="0.2;1;0.2" dur="0.6s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="y1" values="60;70;60" dur="0.6s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="y2" values="80;90;80" dur="0.6s" begin="0.2s" repeatCount="indefinite"/></line>
+                <line x1="60" y1="65" x2="55" y2="85" stroke="#0EA5E9" stroke-width="3.5" stroke-linecap="round"><animate attributeName="opacity" values="0.2;1;0.2" dur="0.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="y1" values="60;70;60" dur="0.6s" begin="0.4s" repeatCount="indefinite"/><animate attributeName="y2" values="80;90;80" dur="0.6s" begin="0.4s" repeatCount="indefinite"/></line>
+                <line x1="75" y1="65" x2="70" y2="85" stroke="#0EA5E9" stroke-width="3.5" stroke-linecap="round"><animate attributeName="opacity" values="0.2;1;0.2" dur="0.6s" begin="0.1s" repeatCount="indefinite"/><animate attributeName="y1" values="60;70;60" dur="0.6s" begin="0.1s" repeatCount="indefinite"/><animate attributeName="y2" values="80;90;80" dur="0.6s" begin="0.1s" repeatCount="indefinite"/></line>
             </svg>`,
         'heavy-rain': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M22 48 Q8 48 8 38 Q8 28 18 26 Q16 12 32 8 Q46 2 54 16 Q57 11 68 13 Q80 15 80 28 Q88 30 88 38 Q88 48 74 48 Z" fill="#334155" stroke="#1E293B" stroke-width="1"/>
-                <line x1="25" y1="55" x2="18" y2="80" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.5s" repeatCount="indefinite"/></line>
-                <line x1="38" y1="53" x2="31" y2="78" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.4s" begin="0.15s" repeatCount="indefinite"/></line>
-                <line x1="51" y1="55" x2="44" y2="80" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.6s" begin="0.3s" repeatCount="indefinite"/></line>
-                <line x1="64" y1="53" x2="57" y2="78" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.45s" begin="0.1s" repeatCount="indefinite"/></line>
-                <line x1="77" y1="55" x2="70" y2="80" stroke="#38BDF8" stroke-width="2.5" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.55s" begin="0.25s" repeatCount="indefinite"/></line>
+                <defs>
+                    <linearGradient id="cloudStorm" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#64748B"/>
+                        <stop offset="100%" stop-color="#1E293B"/>
+                    </linearGradient>
+                </defs>
+                <path d="M25 50 Q10 50 10 35 Q10 20 25 18 Q25 0 45 0 Q65 0 67 18 Q80 20 80 35 Q80 50 65 50 Z" fill="url(#cloudStorm)"/>
+                <line x1="25" y1="60" x2="18" y2="95" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.4s" repeatCount="indefinite"/></line>
+                <line x1="40" y1="60" x2="33" y2="95" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.3s" begin="0.1s" repeatCount="indefinite"/></line>
+                <line x1="55" y1="60" x2="48" y2="95" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.5s" begin="0.2s" repeatCount="indefinite"/></line>
+                <line x1="70" y1="60" x2="63" y2="95" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"><animate attributeName="opacity" values="0.3;1;0.3" dur="0.4s" begin="0.15s" repeatCount="indefinite"/></line>
             </svg>`,
         'snow': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M25 52 Q12 52 12 42 Q12 32 22 30 Q20 17 34 14 Q48 9 55 22 Q58 17 68 19 Q78 21 78 32 Q85 34 85 42 Q85 52 72 52 Z" fill="#94A3B8" stroke="#64748B" stroke-width="1"/>
-                <circle cx="30" cy="64" r="3" fill="#E2E8F0"><animate attributeName="cy" values="60;80;60" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3s" repeatCount="indefinite"/></circle>
-                <circle cx="50" cy="62" r="3.5" fill="#E2E8F0"><animate attributeName="cy" values="58;78;58" dur="3.5s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3.5s" begin="0.5s" repeatCount="indefinite"/></circle>
-                <circle cx="70" cy="64" r="3" fill="#E2E8F0"><animate attributeName="cy" values="60;80;60" dur="2.8s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.8s" begin="1s" repeatCount="indefinite"/></circle>
+                <defs>
+                    <linearGradient id="cloudSnow" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#F1F5F9"/>
+                        <stop offset="100%" stop-color="#94A3B8"/>
+                    </linearGradient>
+                    <filter id="glowSnow">
+                        <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#38BDF8" flood-opacity="0.5"/>
+                    </filter>
+                </defs>
+                <path d="M30 55 Q15 55 15 40 Q15 25 30 23 Q30 5 50 5 Q70 5 72 23 Q85 25 85 40 Q85 55 70 55 Z" fill="url(#cloudSnow)"/>
+                <circle cx="30" cy="70" r="4" fill="#FFF" filter="url(#glowSnow)"><animate attributeName="cy" values="60;90;60" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3s" repeatCount="indefinite"/></circle>
+                <circle cx="50" cy="70" r="4.5" fill="#FFF" filter="url(#glowSnow)"><animate attributeName="cy" values="65;95;65" dur="3.5s" begin="0.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3.5s" begin="0.5s" repeatCount="indefinite"/></circle>
+                <circle cx="70" cy="70" r="4" fill="#FFF" filter="url(#glowSnow)"><animate attributeName="cy" values="55;85;55" dur="2.8s" begin="1s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.8s" begin="1s" repeatCount="indefinite"/></circle>
             </svg>`,
         'heavy-snow': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M22 48 Q8 48 8 38 Q8 28 18 26 Q16 12 32 8 Q46 2 54 16 Q57 11 68 13 Q80 15 80 28 Q88 30 88 38 Q88 48 74 48 Z" fill="#64748B" stroke="#475569" stroke-width="1"/>
-                <circle cx="22" cy="60" r="3" fill="#E2E8F0"><animate attributeName="cy" values="56;82;56" dur="2.5s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.5s" repeatCount="indefinite"/></circle>
-                <circle cx="38" cy="58" r="3.5" fill="#E2E8F0"><animate attributeName="cy" values="54;80;54" dur="3s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3s" begin="0.3s" repeatCount="indefinite"/></circle>
-                <circle cx="54" cy="60" r="3" fill="#E2E8F0"><animate attributeName="cy" values="56;82;56" dur="2.8s" begin="0.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.8s" begin="0.6s" repeatCount="indefinite"/></circle>
-                <circle cx="70" cy="58" r="3.5" fill="#E2E8F0"><animate attributeName="cy" values="54;80;54" dur="3.2s" begin="0.9s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="3.2s" begin="0.9s" repeatCount="indefinite"/></circle>
-                <circle cx="84" cy="60" r="3" fill="#E2E8F0"><animate attributeName="cy" values="56;82;56" dur="2.6s" begin="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.6s" begin="1.2s" repeatCount="indefinite"/></circle>
+                <defs>
+                    <linearGradient id="cloudSnowHeavy" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#CBD5E1"/>
+                        <stop offset="100%" stop-color="#64748B"/>
+                    </linearGradient>
+                </defs>
+                <path d="M25 50 Q10 50 10 35 Q10 20 25 18 Q25 0 45 0 Q65 0 67 18 Q80 20 80 35 Q80 50 65 50 Z" fill="url(#cloudSnowHeavy)"/>
+                <circle cx="20" cy="65" r="3.5" fill="#FFF"><animate attributeName="cy" values="60;95;60" dur="2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2s" repeatCount="indefinite"/></circle>
+                <circle cx="35" cy="65" r="4" fill="#FFF"><animate attributeName="cy" values="55;90;55" dur="2.2s" begin="0.3s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.2s" begin="0.3s" repeatCount="indefinite"/></circle>
+                <circle cx="50" cy="65" r="3.5" fill="#FFF"><animate attributeName="cy" values="65;100;65" dur="1.8s" begin="0.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="1.8s" begin="0.6s" repeatCount="indefinite"/></circle>
+                <circle cx="65" cy="65" r="4.5" fill="#FFF"><animate attributeName="cy" values="55;90;55" dur="2.5s" begin="0.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.5s" begin="0.8s" repeatCount="indefinite"/></circle>
+                <circle cx="80" cy="65" r="3.5" fill="#FFF"><animate attributeName="cy" values="60;95;60" dur="2.1s" begin="0.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;0;1" dur="2.1s" begin="0.2s" repeatCount="indefinite"/></circle>
             </svg>`,
         'thunderstorm': () => `
             <svg viewBox="0 0 100 100" class="weather-icon-svg">
-                <path d="M22 44 Q8 44 8 34 Q8 24 18 22 Q16 8 32 4 Q46 -2 54 12 Q57 7 68 9 Q80 11 80 24 Q88 26 88 34 Q88 44 74 44 Z" fill="#334155" stroke="#1E293B" stroke-width="1"/>
-                <polygon points="48,48 40,68 50,68 42,90 62,62 52,62 58,48" fill="#FDBA74" stroke="#F59E0B" stroke-width="1">
-                    <animate attributeName="opacity" values="0.4;1;0.4;1;0.4" dur="2s" repeatCount="indefinite"/>
+                <defs>
+                    <linearGradient id="cloudThunder" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#475569"/>
+                        <stop offset="100%" stop-color="#0F172A"/>
+                    </linearGradient>
+                    <filter id="glowLightning">
+                        <feDropShadow dx="0" dy="0" stdDeviation="4" flood-color="#FCD34D" flood-opacity="0.8"/>
+                    </filter>
+                </defs>
+                <path d="M30 45 Q15 45 15 30 Q15 15 30 13 Q30 -5 50 -5 Q70 -5 72 13 Q85 15 85 30 Q85 45 70 45 Z" fill="url(#cloudThunder)"/>
+                <polygon points="55,45 45,70 58,70 48,98 75,60 62,60 70,45" fill="#FCD34D" filter="url(#glowLightning)">
+                    <animate attributeName="opacity" values="0.1;1;0.1;1;0.1" dur="1.5s" repeatCount="indefinite"/>
                 </polygon>
-                <line x1="30" y1="50" x2="26" y2="68" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="0.5s" repeatCount="indefinite"/></line>
-                <line x1="72" y1="50" x2="68" y2="68" stroke="#38BDF8" stroke-width="2" stroke-linecap="round"><animate attributeName="opacity" values="0.3;0.8;0.3" dur="0.6s" begin="0.2s" repeatCount="indefinite"/></line>
+                <line x1="30" y1="55" x2="25" y2="85" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="0.4s" repeatCount="indefinite"/></line>
+                <line x1="80" y1="55" x2="75" y2="85" stroke="#38BDF8" stroke-width="3" stroke-linecap="round"><animate attributeName="opacity" values="0.2;0.8;0.2" dur="0.5s" begin="0.2s" repeatCount="indefinite"/></line>
             </svg>`
     };
 
