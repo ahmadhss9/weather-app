@@ -3,8 +3,47 @@
    ========================================== */
 
 const WeatherAPI = (() => {
-    const OPEN_METEO_BASE = 'https://api.open-meteo.com/v1/forecast';
-    const NOMINATIM_BASE = 'https://nominatim.openstreetmap.org';
+    // Default fallback configurations
+    const config = {
+        OPEN_METEO_BASE_URL: 'https://api.open-meteo.com/v1/forecast',
+        NOMINATIM_BASE_URL: 'https://nominatim.openstreetmap.org',
+        IP_GEOLOCATION_URL: 'https://get.geojs.io/v1/ip/geo.json',
+        REVERSE_GEOCODE_URL: 'https://api.bigdatacloud.net/data/reverse-geocode-client',
+        GEOCODING_SEARCH_URL: 'https://geocoding-api.open-meteo.com/v1/search'
+    };
+
+    let envPromise = null;
+
+    // Load environment variables dynamically from the root .env file
+    function ensureEnv() {
+        if (!envPromise) {
+            envPromise = (async () => {
+                try {
+                    const response = await fetch('.env');
+                    if (response.ok) {
+                        const text = await response.text();
+                        text.split('\n').forEach(line => {
+                            const cleanLine = line.trim();
+                            if (cleanLine && !cleanLine.startsWith('#')) {
+                                const index = cleanLine.indexOf('=');
+                                if (index !== -1) {
+                                    const key = cleanLine.substring(0, index).trim();
+                                    const value = cleanLine.substring(index + 1).trim().replace(/^['"]|['"]$/g, '');
+                                    if (key in config) {
+                                        config[key] = value;
+                                    }
+                                }
+                            }
+                        });
+                    }
+                } catch (e) {
+                    // Gracefully catch and use default fallbacks
+                    console.warn('Could not load .env configuration, using built-in defaults.', e);
+                }
+            })();
+        }
+        return envPromise;
+    }
 
     // WMO Weather Code Mapping
     const WMO_CODES = {
@@ -67,7 +106,8 @@ const WeatherAPI = (() => {
     // Detect location using IP for fast LCP
     async function detectLocationIP() {
         try {
-            const response = await fetch('https://get.geojs.io/v1/ip/geo.json');
+            await ensureEnv();
+            const response = await fetch(config.IP_GEOLOCATION_URL);
             const data = await response.json();
             return {
                 lat: parseFloat(data.latitude),
@@ -83,8 +123,9 @@ const WeatherAPI = (() => {
     // Reverse geocode coordinates to city name
     async function reverseGeocode(lat, lon) {
         try {
+            await ensureEnv();
             const response = await fetch(
-                `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`
+                `${config.REVERSE_GEOCODE_URL}?latitude=${lat}&longitude=${lon}&localityLanguage=en`
             );
             const data = await response.json();
             const city = data.city || data.locality || data.principalSubdivision || 'Unknown';
@@ -99,8 +140,9 @@ const WeatherAPI = (() => {
     async function searchCity(query) {
         if (!query || query.length < 1) return [];
         try {
+            await ensureEnv();
             const response = await fetch(
-                `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=8&language=en&format=json`
+                `${config.GEOCODING_SEARCH_URL}?name=${encodeURIComponent(query)}&count=8&language=en&format=json`
             );
             const data = await response.json();
             if (!data.results) return [];
@@ -124,6 +166,7 @@ const WeatherAPI = (() => {
 
     // Fetch full weather data from Open-Meteo
     async function fetchWeather(lat, lon, timezone = 'auto') {
+        await ensureEnv();
         const params = new URLSearchParams({
             latitude: lat,
             longitude: lon,
@@ -142,7 +185,7 @@ const WeatherAPI = (() => {
             forecast_days: 7
         });
 
-        const response = await fetch(`${OPEN_METEO_BASE}?${params}`);
+        const response = await fetch(`${config.OPEN_METEO_BASE_URL}?${params}`);
         if (!response.ok) throw new Error('Weather data unavailable');
         const data = await response.json();
         return parseWeatherData(data);
